@@ -47,10 +47,10 @@ export type RoleAssignmentOption = {
   pendingVolunteerIds: string[];
 };
 
-/* export type FestivalDay = {
+export type FestivalDay = {
   id: string;
   date: string;
   dateLabel: string;
   shortLabel: string;
   dayNumber: number;
-}; */
+};
