@@ -350,7 +350,7 @@ export function VolunteerTable({
                           }
                           // className="h-4 w-4 rounded border-neutral-600 bg-neutral-950 accent-emerald-600 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
                           className={[
-                            "h-4 w-4 rounded border-neutral-600 bg-neutral-950 accent-emerald-600",
+                            "h-4 w-4 rounded border-neutral-600 bg-neutral-950 accent-green-600",
                             interactiveStateClassName,
                           ].join(" ")}
                           aria-label={`${volunteer.volunteerName} confirmed status`}
