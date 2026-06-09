@@ -121,7 +121,7 @@ export function AddVolunteerDialog({
           <p className="mt-1 text-sm text-neutral-400">{shiftLabel}</p>
 
           <p className="mt-2 rounded-lg bg-neutral-900 px-3 py-2 text-xs text-neutral-400">
-            Debug: {sortedAvailableVolunteers.length} interested volunteers ·{" "}
+            INFO: {sortedAvailableVolunteers.length} interested volunteers ·{" "}
             {eligibleVolunteers.length} eligible volunteers ·{" "}
             {roleAssignments.length} role assignments
           </p>
