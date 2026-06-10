@@ -514,7 +514,7 @@ function formatTimeLabel(value?: string): string {
     return value;
   }
 
-  return new Intl.DateTimeFormat("en-CA", {
+  return new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
     minute: "2-digit",
     timeZone: "America/Toronto",

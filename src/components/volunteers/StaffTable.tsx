@@ -329,15 +329,8 @@ export function StaffTable({
         </tbody>
         </table>
       </div>
-      <div className="mt-3 rounded-xl border border-neutral-800 bg-neutral-950 p-3 text-sm text-neutral-400">
-        <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-neutral-500">
-          Staff notes
-        </div>
-
-        <p className="whitespace-pre-wrap">
-          {staffNotes?.trim() ? staffNotes : "—"}
-        </p>
-      </div>
+      
+      {/* Add Staff Button */}
       {onAddStaff && (
       <div className="mt-3 flex justify-center">
         <button
@@ -351,6 +344,17 @@ export function StaffTable({
         </button>
       </div>
       )}
+
+      {/* Staff Notes */}
+      <div className="mt-3 rounded-xl border border-neutral-800 bg-neutral-950 p-3 text-sm text-neutral-400">
+        <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-neutral-500">
+          Staff notes
+        </div>
+
+        <p className="whitespace-pre-wrap">
+          {staffNotes?.trim() ? staffNotes : "—"}
+        </p>
+      </div>
     </section>
   );
 }
