@@ -30,8 +30,7 @@ export function EventShiftCard({
     <article className="min-w-[560px] max-w-[680px] rounded-2xl border border-neutral-800 bg-neutral-900 p-4 shadow-lg">
       <header className="mb-4 border-b border-neutral-800 pb-3 text-center">
         <h3 className="text-base font-semibold text-neutral-50">
-          Arrival time: {shift.arrivalDate} | {shift.shiftStartTime} -{" "}
-          {shift.shiftEndTime}
+          {shift.arrivalDate}
         </h3>
 
         <p className="mt-1 text-sm font-semibold text-neutral-400">{shift.venueName}</p>
@@ -64,6 +63,12 @@ export function EventShiftCard({
         isAdmin={isAdmin}
       />
 
+      <section className="pt-3 mb-3 text-center font-semibold">
+        <h4 className="mb-2 text-center text-md font-semibold uppercase tracking-wide text-neutral-50">
+          Volunteers
+          <p className="mt-1 text-sm font-semibold text-neutral-400">Shift time: {shift.shiftStartTime} -{" "}{shift.shiftEndTime}</p>
+        </h4>
+      </section>
       <VolunteerTable
         volunteers={shift.volunteers}
         roleAssignments={shift.roleAssignments}
