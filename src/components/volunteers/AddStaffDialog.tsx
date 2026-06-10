@@ -55,13 +55,13 @@ export function AddStaffDialog({
     return [...availableStaff].sort((a, b) => a.name.localeCompare(b.name));
   }, [availableStaff]);
 
-  console.log("ADD STAFF DEBUG", {
+  /* console.log("ADD STAFF DEBUG", {
     availableStaff,
     staffScheduleOptions,
     selectedStaffScheduleId,
     selectedStaffId,
     selectedRole,
-  });
+  }); */
 
   if (!isOpen) { return null; }
 
