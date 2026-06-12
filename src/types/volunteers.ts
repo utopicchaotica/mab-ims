@@ -19,6 +19,7 @@ export type VolunteerEventShift = {
   eventName: string;
   venueName: string;
 
+  hasVolunteerShift: boolean;
   arrivalDate: string;
   shiftStartTime: string;
   shiftEndTime: string;

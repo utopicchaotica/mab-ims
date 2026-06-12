@@ -67,7 +67,9 @@ export function EventShiftCard({
       <section className="pt-3 mb-3 text-center font-semibold">
         <h4 className="mb-2 text-center text-md font-semibold uppercase tracking-wide text-neutral-50">
           Volunteers
+        {shift.hasVolunteerShift && (
           <p className="mt-1 text-sm font-semibold text-neutral-400">Shift time: {shift.shiftStartTime} -{" "}{shift.shiftEndTime}</p>
+        )}
         </h4>
       </section>
       <VolunteerTable

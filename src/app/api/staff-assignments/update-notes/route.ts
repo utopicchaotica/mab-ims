@@ -3,7 +3,7 @@ import { updateAirtableRecord } from "@/lib/airtable/client";
 import { AIRTABLE_TABLES } from "@/lib/airtable/tables";
 
 type AirtableStaffScheduleFields = {
-  Notes?: string;
+  "Shift Notes"?: string;
 };
 
 type UpdateStaffNotesBody = {
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
         AIRTABLE_TABLES.staffSchedule!,
         body.staffScheduleId,
         {
-          Notes: body.notes ?? "",
+          "Shift Notes": body.notes ?? "",
         }
       );
 

@@ -255,6 +255,16 @@ export function VolunteerTable({
       }));
   }, [sortedVolunteers]);
 
+  if (roleAssignments.length === 0) {
+    return (
+      <div className="space-y-3">
+        <div className="rounded-xl border border-dashed border-neutral-800 bg-neutral-950 p-3 text-center text-sm text-neutral-500">
+          No volunteers required.
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-3">
       <div className="overflow-hidden rounded-xl border border-neutral-800">
