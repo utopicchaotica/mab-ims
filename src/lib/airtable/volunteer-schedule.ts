@@ -20,6 +20,7 @@ type AirtableEventFields = {
   Venue?: LinkedRecordIds;
   "Full Venue Name"?: string[] | string;
   Type?: string;
+  Status?: string;
 };
 
 type AirtableShiftFields = {
@@ -94,6 +95,7 @@ if (!FESTIVAL_END) {
 function buildFestivalEventFilterFormula() {
   return `AND(
     {Type} = "Concert",
+    {Status} != "Cancelled",
     OR(
       IS_SAME({Event Start Datetime}, DATETIME_PARSE("${FESTIVAL_START}")),
       IS_AFTER({Event Start Datetime}, DATETIME_PARSE("${FESTIVAL_START}"))
