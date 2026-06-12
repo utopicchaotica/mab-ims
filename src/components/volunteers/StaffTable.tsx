@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useMemo, useEffect, useState } from "react";
 // import { addCircleButtonClassName } from "@/components/volunteers/buttonClassNames";
 import { getAddCircleButtonClassName } from "@/components/volunteers/buttonClassNames";
 import type { StaffAssignment, StaffRole } from "@/types/volunteers";
@@ -34,6 +34,7 @@ function getProductionPositionSortValue(position?: string): number {
 
 type StaffTableProps = {
   staff: StaffAssignment[];
+  staffScheduleId?: string;
   staffNotes?: string;
   onAddStaff?: () => void;
   onStaffRemoved?: (staffAssignmentId: string) => void;
@@ -47,6 +48,7 @@ const interactiveStateClassName = [
 
 export function StaffTable({
   staff,
+  staffScheduleId,
   staffNotes,
   onAddStaff,
   onStaffRemoved,
@@ -107,6 +109,52 @@ export function StaffTable({
 
   const router = useRouter();
   const [pendingStaffId, setPendingStaffId] = useState<string | null>(null);
+  
+  // Staff Notes
+  const [localStaffNotes, setLocalStaffNotes] = useState(staffNotes ?? "");
+  const [isSavingNotes, setIsSavingNotes] = useState(false);
+  const [notesError, setNotesError] = useState("");
+  useEffect(() => {
+    setLocalStaffNotes(staffNotes ?? "");
+  }, [staffNotes]);
+
+  async function handleSaveStaffNotes() {
+    if (!staffScheduleId) {
+      setNotesError("No staff schedule is linked to this event yet.");
+      return;
+    }
+
+    setIsSavingNotes(true);
+    setNotesError("");
+
+    try {
+      const response = await fetch("/api/staff-assignments/update-notes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          staffScheduleId,
+          notes: localStaffNotes,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error ?? "Failed to save staff notes.");
+      }
+
+      router.refresh();
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to save staff notes.";
+
+      setNotesError(message);
+    } finally {
+      setIsSavingNotes(false);
+    }
+  }
 
   async function handleChangeStaffRole(
     staffMember: StaffAssignment,
@@ -351,9 +399,39 @@ export function StaffTable({
           Staff notes
         </div>
 
-        <p className="whitespace-pre-wrap">
-          {staffNotes?.trim() ? staffNotes : "—"}
-        </p>
+        {isAdmin ? (
+          <div className="space-y-2">
+            <textarea
+              value={localStaffNotes}
+              onChange={(event) => setLocalStaffNotes(event.target.value)}
+              disabled={isSavingNotes}
+              rows={3}
+              className="w-full resize-y rounded-lg border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-neutral-100 placeholder:text-neutral-600 disabled:cursor-not-allowed disabled:opacity-60"
+              placeholder="Add staff notes..."
+            />
+
+            {notesError && (
+              <p className="rounded-lg border border-red-900 bg-red-950/50 p-2 text-sm text-red-200">
+                {notesError}
+              </p>
+            )}
+
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={handleSaveStaffNotes}
+                disabled={isSavingNotes || !staffScheduleId}
+                className="cursor-pointer rounded-lg bg-neutral-100 px-3 py-1.5 text-sm font-medium text-neutral-950 hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isSavingNotes ? "Saving..." : "Save notes"}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <p className="whitespace-pre-wrap">
+            {staffNotes?.trim() ? staffNotes : "—"}
+          </p>
+        )}
       </div>
     </section>
   );
