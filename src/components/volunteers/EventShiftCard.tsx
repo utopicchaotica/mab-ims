@@ -47,6 +47,7 @@ export function EventShiftCard({
       </section>
       <StaffTable
         staff={localStaff}
+        staffScheduleId={shift.staffScheduleId}
         staffNotes={shift.staffNotes}
         onAddStaff={isAdmin ? () => setIsAddStaffOpen(true) : undefined}
         onStaffRemoved={

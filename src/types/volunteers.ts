@@ -32,6 +32,7 @@ export type VolunteerEventShift = {
   staffNotes?: string;
   availableStaff: StaffOption[];
   staffScheduleOptions: StaffScheduleOption[];
+  staffScheduleId?: string;
 
   volunteers: VolunteerAssignment[];
 

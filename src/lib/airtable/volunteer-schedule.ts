@@ -306,6 +306,8 @@ export async function getVolunteerScheduleData() {
       return staffSchedulesByEventId.get(eventId) ?? [];
     });
 
+    const primaryStaffSchedule = shiftStaffSchedules[0];
+
     const staffScheduleOptions: StaffScheduleOption[] = shiftStaffSchedules.map(
       (staffSchedule) => {
         return {
@@ -417,6 +419,7 @@ export async function getVolunteerScheduleData() {
       availableStaff,
       staffNotes,
       staffScheduleOptions,
+      staffScheduleId: primaryStaffSchedule?.id,
 
       volunteers: volunteersForShift,
       availableVolunteers,
