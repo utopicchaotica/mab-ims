@@ -94,7 +94,10 @@ if (!FESTIVAL_END) {
 
 function buildFestivalEventFilterFormula() {
   return `AND(
-    {Type} = "Concert",
+    OR(
+      {Type} = "Concert",
+      {Type} = "Masterclass"
+    ),
     {Status} != "Cancelled",
     OR(
       IS_SAME({Event Start Datetime}, DATETIME_PARSE("${FESTIVAL_START}")),
