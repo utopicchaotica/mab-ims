@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { DailyVolunteerSchedule } from "@/components/volunteers/DailyVolunteerSchedule";
-import { getVolunteerScheduleData } from "@/lib/airtable/volunteer-schedule";
+import { DailyVolunteerSchedule as DailyStaffSchedule } from "@/components/volunteers/DailyVolunteerSchedule";
+import { getVolunteerScheduleData as getStaffingScheduleData } from "@/lib/airtable/volunteer-schedule";
 
 export const metadata: Metadata = {
-  title: "Volunteer Schedule",
+  title: "Staffing Schedule",
 };
 
-export default async function VolunteerSchedulePage() {
-  const { festivalDays, shifts } = await getVolunteerScheduleData();
+export default async function StaffingSchedulePage() {
+  const { festivalDays, shifts } = await getStaffingScheduleData();
 
   return (
-    <DailyVolunteerSchedule
+    <DailyStaffSchedule
       days={festivalDays}
       shifts={shifts}
       isAdmin={false}

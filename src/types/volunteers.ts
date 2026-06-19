@@ -25,6 +25,7 @@ export type VolunteerEventShift = {
   shiftEndTime: string;
 
   concertStartTime?: string;
+  volunteerShiftId?: string;
   shiftNotes?: string;
 
   timeBlock: TimeBlock;

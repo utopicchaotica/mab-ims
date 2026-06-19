@@ -6,7 +6,7 @@ import type { RoleAssignmentOption, VolunteerAssignment } from "@/types/voluntee
 // import { addCircleButtonClassName } from "@/components/volunteers/buttonClassNames";
 import { getAddCircleButtonClassName } from "@/components/volunteers/buttonClassNames";
 
-type VolunteerSortKey = "volunteerName" | "role" | "confirmed" | "notes";
+type VolunteerSortKey = "volunteerName" | "role" | "confirmed";
 
 type VolunteerTableProps = {
   volunteers: VolunteerAssignment[];
@@ -277,7 +277,8 @@ export function VolunteerTable({
                 activeSortKey={sortKey}
                 sortDirection={sortDirection}
                 onSort={handleSort}
-                className="w-[28%]"
+                // className="w-[28%]"
+                className="w-[40%]"
               />
               <SortableHeader
                 label="Role"
@@ -285,7 +286,8 @@ export function VolunteerTable({
                 activeSortKey={sortKey}
                 sortDirection={sortDirection}
                 onSort={handleSort}
-                className="w-[28%]"
+                // className="w-[28%]"
+                className="w-[40%]"
               />
               <SortableHeader
                 label="✅"
@@ -297,14 +299,14 @@ export function VolunteerTable({
                 align="center"
                 labelClassName="text-base"
               />
-              <SortableHeader
+              {/* <SortableHeader
                 label="Notes"
                 sortKey="notes"
                 activeSortKey={sortKey}
                 sortDirection={sortDirection}
                 onSort={handleSort}
                 className="w-[28%]"
-              />
+              /> */}
             {isAdmin && (
               <th className="w-[8%] px-3 py-2 text-center">
                 <div className="flex justify-center">
@@ -326,7 +328,8 @@ export function VolunteerTable({
               <Fragment key={group.role}>
                 <tr key={`${group.role}-heading`} className="bg-neutral-950/80">
                   <td
-                    colSpan={isAdmin ? 5 : 4}
+                    // colSpan={isAdmin ? 5 : 4}
+                    colSpan={isAdmin ? 4 : 3}
                     className="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-neutral-400"
                   >
                     {group.role}
@@ -384,9 +387,9 @@ export function VolunteerTable({
                       </div>
                     </td>
 
-                    <td className="whitespace-normal break-words px-3 py-2 text-neutral-400">
+                    {/* <td className="whitespace-normal break-words px-3 py-2 text-neutral-400">
                       {volunteer.notes || "—"}
-                    </td>
+                    </td> */}
                   {isAdmin && (
                     <td className="px-3 py-2">
                       <div className="flex justify-center">

@@ -80,12 +80,21 @@ export function EventShiftCard({
         isAdmin={isAdmin}
       />
 
-      {shift.shiftNotes && (
+      {/* {shift.shiftNotes && (
         <section className="mt-4 rounded-xl bg-neutral-950 p-3 text-sm text-neutral-300">
           <p className="mb-1 font-medium text-neutral-400">Shift notes</p>
           <p>{shift.shiftNotes}</p>
         </section>
-      )}
+      )} */}
+      <div className="mt-3 rounded-xl border border-neutral-800 bg-neutral-950 p-3 text-sm text-neutral-400">
+        <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-neutral-500">
+          Volunteer notes
+        </div>
+
+        <p className="whitespace-pre-wrap">
+          {shift.shiftNotes?.trim() ? shift.shiftNotes : "—"}
+        </p>
+      </div>
 
     {isAdmin && (
       <AddStaffDialog

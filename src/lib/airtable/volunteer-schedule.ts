@@ -273,6 +273,11 @@ export async function getVolunteerScheduleData() {
 
     const hasVolunteerShift = eventVolunteerShifts.length > 0;
 
+    const volunteerShiftNotes = eventVolunteerShifts
+      .map((volunteerShift) => volunteerShift.fields["Shift Notes"])
+      .filter(Boolean)
+      .join("\n\n");
+
     const shiftAssignments = eventVolunteerShifts.flatMap((volunteerShift) => {
       return assignmentsByShiftId.get(volunteerShift.id) ?? [];
     });
@@ -367,7 +372,7 @@ export async function getVolunteerScheduleData() {
               volunteerName: volunteer?.fields.Name ?? "Unnamed volunteer",
               role,
               confirmed: true,
-              notes: assignment.fields.Notes,
+              // notes: assignment.fields.Notes,
             };
           }
         );
@@ -383,7 +388,7 @@ export async function getVolunteerScheduleData() {
               volunteerName: volunteer?.fields.Name ?? "Unnamed volunteer",
               role,
               confirmed: false,
-              notes: assignment.fields.Notes,
+              // notes: assignment.fields.Notes,
             };
           }
         );
@@ -533,7 +538,9 @@ export async function getVolunteerScheduleData() {
       concertStartTime: formatTimeLabel(eventStart),
 
       // shiftNotes: shift.fields["Shift Notes"],
-      shiftNotes: primaryVolunteerShift?.fields["Shift Notes"],
+      // shiftNotes: primaryVolunteerShift?.fields["Shift Notes"],
+      volunteerShiftId: primaryVolunteerShift?.id,
+      shiftNotes: volunteerShiftNotes,
 
       timeBlock: inferTimeBlockFromDatetime(shiftStart),
 
