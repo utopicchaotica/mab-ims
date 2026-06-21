@@ -39,9 +39,16 @@ export function EventShiftCard({
       <section className="mb-4 text-sm text-center font-semibold">
         <p className="text-neutral-100">{shift.eventName}</p>
 
+        {shift.rehearsalStartTime && (
+          <p className="mt-1 text-neutral-400">
+            {shift.rehearsalLabel ?? "Rehearsal"}: {shift.rehearsalStartTime}
+            {shift.rehearsalEndTime ? `–${shift.rehearsalEndTime}` : ""}
+          </p>
+        )}
+
         {shift.concertStartTime && (
           <p className="mt-1 text-neutral-400">
-            Concert time: {shift.concertStartTime}
+            Concert: {shift.concertStartTime}
           </p>
         )}
       </section>
@@ -68,7 +75,7 @@ export function EventShiftCard({
         <h4 className="mb-2 text-center text-md font-semibold uppercase tracking-wide text-neutral-50">
           Volunteers
         {shift.hasVolunteerShift && (
-          <p className="mt-1 text-sm font-semibold text-neutral-400">Shift time: {shift.shiftStartTime} -{" "}{shift.shiftEndTime}</p>
+          <p className="mt-1 text-sm font-semibold text-neutral-400">Shift: {shift.shiftStartTime}–{shift.shiftEndTime}</p>
         )}
         </h4>
       </section>

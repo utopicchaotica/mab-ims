@@ -27,6 +27,9 @@ export type VolunteerEventShift = {
   concertStartTime?: string;
   volunteerShiftId?: string;
   shiftNotes?: string;
+  rehearsalLabel?: string;
+  rehearsalStartTime?: string;
+  rehearsalEndTime?: string;
 
   timeBlock: TimeBlock;
 

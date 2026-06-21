@@ -21,6 +21,7 @@ type AirtableEventFields = {
   "Full Venue Name"?: string[] | string;
   Type?: string;
   Status?: string;
+  "From field: Related Event"?: LinkedRecordIds;
 };
 
 type AirtableShiftFields = {
@@ -96,7 +97,9 @@ function buildFestivalEventFilterFormula() {
   return `AND(
     OR(
       {Type} = "Concert",
-      {Type} = "Masterclass"
+      {Type} = "Masterclass",
+      {Type} = "Rehearsal",
+      {Type} = "Sound Check"
     ),
     {Status} != "Cancelled",
     OR(
@@ -222,6 +225,10 @@ export async function getVolunteerScheduleData() {
     volunteers.map((volunteer) => [volunteer.id, volunteer])
   );
 
+  const mainEvents = events.filter((event) => {
+    return event.fields.Type === "Concert" || event.fields.Type === "Masterclass";
+  });
+
   const volunteerShiftsByEventId = new Map<string, typeof volunteerShifts>();
   for (const volunteerShift of volunteerShifts) {
     const linkedEventIds = volunteerShift.fields.Event ?? [];
@@ -265,8 +272,16 @@ export async function getVolunteerScheduleData() {
     }
   }
 
+  const rehearsalById = new Map(
+    events
+      .filter((event) => {
+        return event.fields.Type === "Rehearsal" || event.fields.Type === "Sound Check";
+      })
+      .map((event) => [event.id, event])
+  );
+
   // const volunteerEventShifts: VolunteerEventShift[] = shifts.map((shift) => {
-  const volunteerEventShifts: VolunteerEventShift[] = events.map((event) => {
+  const volunteerEventShifts: VolunteerEventShift[] = mainEvents.map((event) => {
     // const shiftAssignments = assignmentsByShiftId.get(shift.id) ?? [];
     const eventVolunteerShifts = volunteerShiftsByEventId.get(event.id) ?? [];
     const primaryVolunteerShift = eventVolunteerShifts[0];
@@ -412,6 +427,26 @@ export async function getVolunteerScheduleData() {
     // const shiftEnd = shift.fields["End Datetime"];
     const shiftEnd = primaryVolunteerShift?.fields["End Datetime"] ?? eventEnd;
 
+    const relatedEventIds = event.fields["From field: Related Event"] ?? [];
+    const eventDate = getDateKey(eventStart);
+
+    const relatedRehearsal = relatedEventIds
+      .map((relatedEventId) => rehearsalById.get(relatedEventId))
+      .find((relatedEvent) => {
+        if (!relatedEvent) {
+          return false;
+        }
+
+        const rehearsalStart = relatedEvent.fields["Event Start Datetime"];
+        const rehearsalEnd = relatedEvent.fields["Event End Datetime"];
+
+        return (
+          (relatedEvent.fields.Type === "Rehearsal" ||
+            relatedEvent.fields.Type === "Sound Check") &&
+          getDateKey(rehearsalStart) === eventDate
+        );
+      });
+
     /* const linkedEventIds = shift.fields.Event ?? [];
 
     const shiftStaffSchedules = linkedEventIds.flatMap((eventId) => {
@@ -509,7 +544,7 @@ export async function getVolunteerScheduleData() {
       // id: shift.id,
       id: event.id,
 
-      date: getDateKey(shiftStart),
+      date: getDateKey(eventStart),
       dayNumber: 0,
 
       /* eventName:
@@ -537,12 +572,27 @@ export async function getVolunteerScheduleData() {
 
       concertStartTime: formatTimeLabel(eventStart),
 
+      rehearsalLabel:
+        relatedRehearsal?.fields.Type === "Sound Check"
+          ? "Sound Check"
+          : relatedRehearsal?.fields.Type === "Rehearsal"
+            ? "Rehearsal"
+            : undefined,
+
+      // relatedRehearsals,
+      rehearsalStartTime: relatedRehearsal
+      ? formatTimeLabel(relatedRehearsal.fields["Event Start Datetime"])
+      : undefined,
+      rehearsalEndTime: relatedRehearsal
+      ? formatTimeLabel(relatedRehearsal.fields["Event End Datetime"])
+      : undefined,
+
       // shiftNotes: shift.fields["Shift Notes"],
       // shiftNotes: primaryVolunteerShift?.fields["Shift Notes"],
       volunteerShiftId: primaryVolunteerShift?.id,
       shiftNotes: volunteerShiftNotes,
 
-      timeBlock: inferTimeBlockFromDatetime(shiftStart),
+      timeBlock: inferTimeBlockFromDatetime(eventStart),
 
       staffScheduleId: primaryStaffSchedule?.id,
       staff: staffForShift,
