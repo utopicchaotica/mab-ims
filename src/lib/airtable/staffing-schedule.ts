@@ -172,7 +172,7 @@ function parseStaffPositionJSON(value?: string): Record<string, string> {
   }
 }
 
-export async function getVolunteerScheduleData() {
+export async function getStaffingScheduleData() {
   /* const [shifts, assignments, volunteers, staffRecords, staffSchedules] =
     await Promise.all([
       listAirtableRecords<AirtableShiftFields>(AIRTABLE_TABLES.shifts!, {
@@ -756,3 +756,5 @@ function getLinkedDisplayValue(value?: unknown): string | undefined {
 
   return undefined;
 }
+
+export const getVolunteerScheduleData = getStaffingScheduleData;

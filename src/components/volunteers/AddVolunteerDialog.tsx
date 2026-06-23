@@ -11,7 +11,7 @@ import type {
 type AddVolunteerDialogProps = {
   isOpen: boolean;
   onClose: () => void;
-  shiftLabel: string;
+  eventLabel: string;
   availableVolunteers: VolunteerOption[];
   roleAssignments: RoleAssignmentOption[];
 };
@@ -19,7 +19,7 @@ type AddVolunteerDialogProps = {
 export function AddVolunteerDialog({
   isOpen,
   onClose,
-  shiftLabel,
+  eventLabel,
   availableVolunteers,
   roleAssignments,
 }: AddVolunteerDialogProps) {
@@ -37,9 +37,9 @@ export function AddVolunteerDialog({
       return;
     }
 
-    setSelectedAssignmentId(roleAssignments[0]?.id ?? "");
-    setSelectedVolunteerId("");
     setError("");
+    setSelectedVolunteerId("");
+    setSelectedAssignmentId(roleAssignments[0]?.id ?? "");
   }, [isOpen, roleAssignments]);
 
   const selectedAssignment = useMemo(() => {
@@ -85,6 +85,13 @@ export function AddVolunteerDialog({
   function handleAddVolunteer() {
     setError("");
 
+    /* console.log("SUBMIT ADD VOLUNTEER DEBUG", {
+      selectedVolunteerId,
+      selectedAssignmentId,
+      availableVolunteers,
+      roleAssignments,
+    }); */
+
     if (!selectedAssignmentId || !selectedVolunteerId) {
       setError("Choose a role and volunteer first.");
       return;
@@ -118,7 +125,7 @@ export function AddVolunteerDialog({
       <div className="w-full max-w-lg rounded-2xl border border-neutral-800 bg-neutral-950 p-5 text-neutral-100 shadow-2xl">
         <header className="mb-5">
           <h2 className="text-xl font-semibold">Add volunteer</h2>
-          <p className="mt-1 text-sm text-neutral-400">{shiftLabel}</p>
+          <p className="mt-1 text-sm text-neutral-400">{eventLabel}</p>
 
           <p className="mt-2 rounded-lg bg-neutral-900 px-3 py-2 text-xs text-neutral-400">
             INFO: {sortedAvailableVolunteers.length} interested volunteers ·{" "}

@@ -3,12 +3,12 @@
 import { useState, useEffect } from "react";
 import { AddVolunteerDialog } from "@/components/volunteers/AddVolunteerDialog";
 import { VolunteerTable } from "@/components/volunteers/VolunteerTable";
-import type { VolunteerEventShift } from "@/types/volunteers";
+import type { ScheduleEvent } from "@/types/volunteers";
 import { AddStaffDialog } from "@/components/volunteers/AddStaffDialog";
 import { StaffTable } from "@/components/volunteers/StaffTable";
 
 type EventShiftCardProps = {
-  shift: VolunteerEventShift;
+  shift: ScheduleEvent;
   isAdmin?: boolean;
 };
 
@@ -83,6 +83,17 @@ export function EventShiftCard({
         volunteers={shift.volunteers}
         roleAssignments={shift.roleAssignments}
         onAddVolunteer={isAdmin ? () => setIsAddVolunteerOpen(true) : undefined}
+        /* onAddVolunteer={() => {
+          console.log("ADD VOLUNTEER DEBUG", {
+            eventName: shift.eventName,
+            hasVolunteerShift: shift.hasVolunteerShift,
+            volunteerShiftId: shift.volunteerShiftId,
+            availableVolunteers: shift.availableVolunteers,
+            roleAssignments: shift.roleAssignments,
+          });
+
+          setIsAddVolunteerOpen(true);
+        }} */
         interactiveOptions={{ usePointerCursor: isAdmin }}
         isAdmin={isAdmin}
       />
@@ -128,7 +139,7 @@ export function EventShiftCard({
       <AddVolunteerDialog
         isOpen={isAddVolunteerOpen}
         onClose={() => setIsAddVolunteerOpen(false)}
-        shiftLabel={`${shift.eventName} • ${shift.shiftStartTime} - ${shift.shiftEndTime}`}
+        eventLabel={`${shift.eventName} • ${shift.shiftStartTime} - ${shift.shiftEndTime}`}
         availableVolunteers={shift.availableVolunteers}
         roleAssignments={shift.roleAssignments}
       />

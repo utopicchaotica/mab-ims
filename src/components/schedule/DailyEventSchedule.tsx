@@ -3,19 +3,21 @@
 import { useMemo, useState } from "react";
 import { DayNav } from "@/components/volunteers/DayNav";
 import { EventShiftCard } from "@/components/volunteers/EventShiftCard";
-import type { FestivalDay, VolunteerEventShift } from "@/types/volunteers";
+import type { FestivalDay, ScheduleEvent } from "@/types/volunteers";
 
-type DailyVolunteerScheduleProps = {
+type DailyEventScheduleProps = {
   days: FestivalDay[];
-  shifts: VolunteerEventShift[];
+  events: ScheduleEvent[];
   isAdmin?: boolean;
+  isDemoMode?: boolean;
 };
 
-export function DailyVolunteerSchedule({
+export function DailyEventSchedule({
   days,
-  shifts,
+  events,
   isAdmin = false,
-}: DailyVolunteerScheduleProps) {
+  isDemoMode = false,
+}: DailyEventScheduleProps) {
   const [selectedDate, setSelectedDate] = useState(days[0]?.date ?? "");
 
   const selectedDay = useMemo(() => {
@@ -23,15 +25,15 @@ export function DailyVolunteerSchedule({
   }, [days, selectedDate]);
 
   const selectedDayShifts = useMemo(() => {
-    return shifts.filter((shift) => shift.date === selectedDate);
-  }, [shifts, selectedDate]);
+    return events.filter((event) => event.date === selectedDate);
+  }, [events, selectedDate]);
 
   const afternoonShifts = selectedDayShifts.filter(
-    (shift) => shift.timeBlock === "afternoon"
+    (event) => event.timeBlock === "afternoon"
   );
 
   const eveningShifts = selectedDayShifts.filter(
-    (shift) => shift.timeBlock === "evening"
+    (event) => event.timeBlock === "evening"
   );
 
   return (
@@ -49,6 +51,12 @@ export function DailyVolunteerSchedule({
         <p className="mt-2 text-sm text-neutral-400">
           {selectedDayShifts.length} total events
         </p>
+
+        {isDemoMode && (
+          <p className="mt-2 inline-flex rounded-full border border-amber-700 bg-amber-950 px-3 py-1 text-xs font-medium text-amber-200">
+            Demo mode: changes are temporary
+          </p>
+        )}
 
         <DayNav
           days={days}
@@ -74,7 +82,7 @@ export function DailyVolunteerSchedule({
 
 type ScheduleRowProps = {
   title: string;
-  shifts: VolunteerEventShift[];
+  shifts: ScheduleEvent[];
   isAdmin: boolean;
 };
 

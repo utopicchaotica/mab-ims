@@ -92,3 +92,5 @@ export type StaffAssignment = {
   // startTime?: string;
   // endTime?: string;
 };
+
+export type ScheduleEvent = VolunteerEventShift;
