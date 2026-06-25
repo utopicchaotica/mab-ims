@@ -43,6 +43,8 @@ export type VolunteerEventShift = {
 
   availableVolunteers: VolunteerOption[];
   roleAssignments: RoleAssignmentOption[];
+
+  prodInfo?: ProdInfo;
 };
 
 export type VolunteerOption = {
@@ -91,6 +93,11 @@ export type StaffAssignment = {
   // Placeholder for later, when staff shifts get explicit times.
   // startTime?: string;
   // endTime?: string;
+};
+
+export type ProdInfo = {
+  chairs?: number;
+  musicStands?: number;
 };
 
 export type ScheduleEvent = VolunteerEventShift;

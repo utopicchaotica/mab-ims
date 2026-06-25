@@ -31,6 +31,7 @@ export function AddVolunteerDialog({
   const [selectedVolunteerId, setSelectedVolunteerId] = useState("");
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
+  // const firstRoleAssignmentId = roleAssignments[0]?.id ?? "";
 
   useEffect(() => {
     if (!isOpen) {
@@ -39,8 +40,10 @@ export function AddVolunteerDialog({
 
     setError("");
     setSelectedVolunteerId("");
+    // setSelectedAssignmentId(firstRoleAssignmentId);
     setSelectedAssignmentId(roleAssignments[0]?.id ?? "");
-  }, [isOpen, roleAssignments]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   const selectedAssignment = useMemo(() => {
     return roleAssignments.find(
@@ -210,7 +213,6 @@ export function AddVolunteerDialog({
               value={selectedAssignmentId}
               onChange={(event) => {
                 setSelectedAssignmentId(event.target.value);
-                setSelectedVolunteerId("");
               }}
               className="w-full rounded-xl border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-neutral-100"
             >

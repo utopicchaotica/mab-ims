@@ -2,6 +2,7 @@ import { listAirtableRecords } from "@/lib/airtable/client";
 import { AIRTABLE_TABLES } from "@/lib/airtable/tables";
 import type {
   FestivalDay,
+  ProdInfo,
   StaffAssignment,
   StaffOption,
   StaffScheduleOption,
@@ -22,6 +23,7 @@ type AirtableEventFields = {
   Type?: string;
   Status?: string;
   "From field: Related Event"?: LinkedRecordIds;
+  ProductionJSON?: string;
 };
 
 type AirtableShiftFields = {
@@ -92,6 +94,8 @@ if (!FESTIVAL_START) {
 if (!FESTIVAL_END) {
   throw new Error("Missing FESTIVAL_END in .env.local");
 }
+
+// HELPERS
 
 function buildFestivalEventFilterFormula() {
   return `AND(
@@ -171,6 +175,37 @@ function parseStaffPositionJSON(value?: string): Record<string, string> {
     return {};
   }
 }
+
+function parseProductionJSON(value?: string): ProdInfo | undefined {
+  if (!value?.trim()) {
+    return undefined;
+  }
+
+  try {
+    const parsed: unknown = JSON.parse(value);
+
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return undefined;
+    }
+
+    const data = parsed as Record<string, unknown>;
+
+    return {
+      chairs:
+        typeof data.chairs === "number" && Number.isFinite(data.chairs)
+          ? data.chairs
+          : undefined,
+      musicStands:
+        typeof data.musicStands === "number" && Number.isFinite(data.musicStands)
+          ? data.musicStands
+          : undefined,
+    };
+  } catch {
+    return undefined;
+  }
+}
+
+// END OF HELPERS
 
 export async function getStaffingScheduleData() {
   /* const [shifts, assignments, volunteers, staffRecords, staffSchedules] =
@@ -571,6 +606,7 @@ export async function getStaffingScheduleData() {
       shiftEndTime: formatTimeLabel(shiftEnd),
 
       concertStartTime: formatTimeLabel(eventStart),
+      prodInfo: parseProductionJSON(event.fields.ProductionJSON),
 
       rehearsalLabel:
         relatedRehearsal?.fields.Type === "Sound Check"

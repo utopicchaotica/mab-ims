@@ -13,6 +13,7 @@ export default async function StaffingDemoPage() {
     <DailyEventSchedule
       days={festivalDays}
       events={shifts}
+      showProdInfo={false}
       isAdmin={true}
       isDemoMode={true}
     />

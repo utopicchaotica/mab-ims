@@ -9,6 +9,9 @@ type DailyEventScheduleProps = {
   days: FestivalDay[];
   events: ScheduleEvent[];
   isAdmin?: boolean;
+  isProdAdmin?: boolean;
+  showStaffing?: boolean;
+  showProdInfo?: boolean;
   isDemoMode?: boolean;
 };
 
@@ -16,6 +19,9 @@ export function DailyEventSchedule({
   days,
   events,
   isAdmin = false,
+  isProdAdmin = false,
+  showStaffing = true,
+  showProdInfo = false,
   isDemoMode = false,
 }: DailyEventScheduleProps) {
   const [selectedDate, setSelectedDate] = useState(days[0]?.date ?? "");
@@ -69,12 +75,18 @@ export function DailyEventSchedule({
         title="Afternoon Events"
         shifts={afternoonShifts}
         isAdmin={isAdmin}
+        isProdAdmin={isProdAdmin}
+        showStaffing={showStaffing}
+        showProdInfo={showProdInfo}
       />
 
       <ScheduleRow
         title="Evening Events"
         shifts={eveningShifts}
         isAdmin={isAdmin}
+        isProdAdmin={isProdAdmin}
+        showStaffing={showStaffing}
+        showProdInfo={showProdInfo}
       />
     </main>
   );
@@ -83,10 +95,13 @@ export function DailyEventSchedule({
 type ScheduleRowProps = {
   title: string;
   shifts: ScheduleEvent[];
+  showStaffing: boolean;
+  showProdInfo: boolean;
   isAdmin: boolean;
+  isProdAdmin: boolean;
 };
 
-function ScheduleRow({ title, shifts, isAdmin }: ScheduleRowProps) {
+function ScheduleRow({ title, shifts, isAdmin, isProdAdmin,showStaffing, showProdInfo }: ScheduleRowProps) {
   return (
     <section className="mb-10">
       <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-400">
@@ -100,6 +115,9 @@ function ScheduleRow({ title, shifts, isAdmin }: ScheduleRowProps) {
               key={shift.id}
               shift={shift}
               isAdmin={isAdmin}
+              isProdAdmin={isProdAdmin}
+              showStaffing={showStaffing}
+              showProdInfo={showProdInfo} 
             />
           ))}
         </div>
