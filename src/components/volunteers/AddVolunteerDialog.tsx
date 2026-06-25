@@ -31,6 +31,7 @@ export function AddVolunteerDialog({
   const [selectedVolunteerId, setSelectedVolunteerId] = useState("");
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
+  const firstRoleAssignmentId = roleAssignments[0]?.id ?? "";
 
   useEffect(() => {
     if (!isOpen) {
@@ -39,8 +40,8 @@ export function AddVolunteerDialog({
 
     setError("");
     setSelectedVolunteerId("");
-    setSelectedAssignmentId(roleAssignments[0]?.id ?? "");
-  }, [isOpen, roleAssignments]);
+    setSelectedAssignmentId(firstRoleAssignmentId);
+  }, [isOpen, firstRoleAssignmentId]);
 
   const selectedAssignment = useMemo(() => {
     return roleAssignments.find(

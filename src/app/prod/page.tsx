@@ -1,21 +1,19 @@
-import type { Metadata } from "next";
 import { DailyEventSchedule } from "@/components/schedule/DailyEventSchedule";
-// import type { FestivalDay, VolunteerEventShift } from "@/types/volunteers";
 import { getStaffingScheduleData } from "@/lib/airtable/staffing-schedule";
 
-export const metadata: Metadata = {
-  title: "MAB 2026 Summer Festival - Staffing",
+export const metadata = {
+  title: "Production Schedule",
 };
 
-export default async function StaffingSchedulePage() {
+export default async function ProductionSchedulePage() {
   const { festivalDays, shifts } = await getStaffingScheduleData();
 
   return (
     <DailyEventSchedule
       days={festivalDays}
       events={shifts}
-      showProdInfo={false}
-      isAdmin={true}
+      showStaffing={true}
+      showProdInfo={true}
     />
   );
 }
