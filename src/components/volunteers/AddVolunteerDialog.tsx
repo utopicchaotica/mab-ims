@@ -40,8 +40,16 @@ export function AddVolunteerDialog({
 
     setError("");
     setSelectedVolunteerId("");
-    setSelectedAssignmentId(firstRoleAssignmentId);
-  }, [isOpen, firstRoleAssignmentId]);
+    // setSelectedAssignmentId(firstRoleAssignmentId);
+    setSelectedAssignmentId(
+      [...roleAssignments].sort((a, b) => a.role.localeCompare(b.role))[0]?.id ?? ""
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
+  const sortedRoleAssignments = useMemo(() => {
+    return [...roleAssignments].sort((a, b) => a.role.localeCompare(b.role));
+  }, [roleAssignments]);
 
   const selectedAssignment = useMemo(() => {
     return roleAssignments.find(
@@ -214,7 +222,7 @@ export function AddVolunteerDialog({
               }}
               className="w-full rounded-xl border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-neutral-100"
             >
-              {roleAssignments.map((assignment) => (
+              {sortedRoleAssignments.map((assignment) => (
                 <option key={assignment.id} value={assignment.id}>
                   {assignment.role}
                 </option>
