@@ -28,7 +28,8 @@ export function AddVolunteerDialog({
   const [selectedAssignmentId, setSelectedAssignmentId] = useState(
     roleAssignments[0]?.id ?? ""
   );
-  const [selectedVolunteerId, setSelectedVolunteerId] = useState("");
+  // const [selectedVolunteerId, setSelectedVolunteerId] = useState("");
+  const [selectedVolunteerIds, setSelectedVolunteerIds] = useState<string[]>([]);
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
   const firstRoleAssignmentId = roleAssignments[0]?.id ?? "";
@@ -39,7 +40,8 @@ export function AddVolunteerDialog({
     }
 
     setError("");
-    setSelectedVolunteerId("");
+    // setSelectedVolunteerId("");
+    setSelectedVolunteerIds([]);
     // setSelectedAssignmentId(firstRoleAssignmentId);
     setSelectedAssignmentId(
       [...roleAssignments].sort((a, b) => a.role.localeCompare(b.role))[0]?.id ?? ""
@@ -93,6 +95,16 @@ export function AddVolunteerDialog({
     return null;
   }
 
+  function toggleVolunteer(volunteerId: string) {
+    setSelectedVolunteerIds((currentVolunteerIds) => {
+      if (currentVolunteerIds.includes(volunteerId)) {
+        return currentVolunteerIds.filter((id) => id !== volunteerId);
+      }
+
+      return [...currentVolunteerIds, volunteerId];
+    });
+  }
+
   function handleAddVolunteer() {
     setError("");
 
@@ -103,28 +115,36 @@ export function AddVolunteerDialog({
       roleAssignments,
     }); */
 
-    if (!selectedAssignmentId || !selectedVolunteerId) {
+    /* if (!selectedAssignmentId || !selectedVolunteerId) {
       setError("Choose a role and volunteer first.");
+      return;
+    } */
+
+    if (selectedVolunteerIds.length === 0 || !selectedAssignmentId) {
+      setError("Please choose at least one volunteer and a role.");
       return;
     }
 
     startTransition(async () => {
-      const response = await fetch("/api/volunteer-assignments/add-pending", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          assignmentId: selectedAssignmentId,
-          volunteerId: selectedVolunteerId,
-        }),
-      });
+      for (const volunteerId of selectedVolunteerIds) {
+        const response = await fetch("/api/volunteer-assignments/add-pending", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            assignmentId: selectedAssignmentId,
+            // volunteerId: selectedVolunteerId,
+            volunteerIds: selectedVolunteerIds,
+          }),
+        });
 
-      if (!response.ok) {
-        const data = await response.json().catch(() => null);
-        setError(data?.error ?? "Could not add volunteer.");
-        return;
-      }
+        if (!response.ok) {
+          const data = await response.json().catch(() => null);
+          setError(data?.error ?? "Could not add volunteer.");
+          return;
+        }
+      } //loop through selectedVolunteerIds
 
       onClose();
       router.refresh();
@@ -172,7 +192,8 @@ export function AddVolunteerDialog({
             )}
           </label> */}
 
-          <select
+          {/* single select */}
+          {/* <select
             value={selectedVolunteerId}
             onChange={(event) => setSelectedVolunteerId(event.target.value)}
             className="w-full rounded-xl border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-neutral-100"
@@ -184,7 +205,42 @@ export function AddVolunteerDialog({
                 {volunteer.name}
               </option>
             ))}
-          </select>
+          </select> */}
+
+          <div className="max-h-64 space-y-2 overflow-y-auto rounded-xl border border-neutral-700 bg-neutral-900 p-2">
+            {eligibleVolunteers.length > 0 ? (
+              eligibleVolunteers.map((volunteer) => {
+                const isSelected = selectedVolunteerIds.includes(volunteer.id);
+
+                return (
+                  <label
+                    key={volunteer.id}
+                    className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1 text-sm text-neutral-100 hover:bg-neutral-800"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => toggleVolunteer(volunteer.id)}
+                      className="h-4 w-4 rounded border-neutral-600 bg-neutral-950 accent-green-600"
+                    />
+
+                    <span>{volunteer.name}</span>
+                  </label>
+                );
+              })
+            ) : (
+              <p className="px-2 py-1 text-sm text-neutral-500">
+                No eligible volunteers.
+              </p>
+            )}
+          </div>
+
+          {selectedVolunteerIds.length > 0 && (
+            <p className="text-sm text-neutral-400">
+              {selectedVolunteerIds.length} volunteer
+              {selectedVolunteerIds.length === 1 ? "" : "s"} selected.
+            </p>
+          )}
 
           {availableVolunteers.length === 0 && (
             <p className="mt-2 text-sm text-amber-300">
@@ -202,8 +258,7 @@ export function AddVolunteerDialog({
             roleAssignments.length > 0 &&
             eligibleVolunteers.length === 0 && (
               <p className="mt-2 text-sm text-amber-300">
-                Volunteers were found, but they are already pending or confirmed for this
-                selected role.
+                Volunteers were found, but they are already pending or confirmed for this shift.
               </p>
             )}
 
@@ -245,10 +300,18 @@ export function AddVolunteerDialog({
           <button
             type="button"
             onClick={handleAddVolunteer}
-            disabled={isPending}
+            disabled={
+              isPending ||
+              selectedVolunteerIds.length === 0 ||
+              !selectedAssignmentId
+            }
             className="rounded-xl bg-emerald-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isPending ? "Adding..." : "Add to pending"}
+            {isPending
+              ? "Adding..."
+              : selectedVolunteerIds.length > 1
+                ? `Add ${selectedVolunteerIds.length} to pending`
+                : "Add to pending"}
           </button>
         </footer>
       </div>
