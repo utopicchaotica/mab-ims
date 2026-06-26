@@ -9,6 +9,8 @@ export const STAFF_POSITION_OPTIONS = [
   "Sound",
   "Stagehand",
   "Runner",
+  "Ticket Checker",
+  "Programs",
   "Other",
 ] as const;
 
