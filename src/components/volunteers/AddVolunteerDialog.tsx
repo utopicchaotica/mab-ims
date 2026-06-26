@@ -135,13 +135,13 @@ export function AddVolunteerDialog({
           body: JSON.stringify({
             assignmentId: selectedAssignmentId,
             // volunteerId: selectedVolunteerId,
-            volunteerIds: selectedVolunteerIds,
+            volunteerId,
           }),
         });
 
         if (!response.ok) {
           const data = await response.json().catch(() => null);
-          setError(data?.error ?? "Could not add volunteer.");
+          setError(data?.error ?? "Could not add one or more volunteers.");
           return;
         }
       } //loop through selectedVolunteerIds
