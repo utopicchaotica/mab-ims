@@ -68,16 +68,18 @@ export function AddVolunteerDialog({
       return [];
     }
 
-    const alreadyAssignedIds = new Set([
-      ...selectedAssignment.currentVolunteerIds,
-      ...selectedAssignment.confirmedVolunteerIds,
-      ...selectedAssignment.pendingVolunteerIds,
-    ]);
+    const alreadyAssignedIds = new Set(
+      roleAssignments.flatMap((assignment) => [
+        ...assignment.currentVolunteerIds,
+        ...assignment.confirmedVolunteerIds,
+        ...assignment.pendingVolunteerIds,
+      ])
+    );
 
     return sortedAvailableVolunteers.filter(
       (volunteer) => !alreadyAssignedIds.has(volunteer.id)
     );
-  }, [sortedAvailableVolunteers, selectedAssignment]);
+  }, [sortedAvailableVolunteers, selectedAssignment, roleAssignments]);
 
   /* console.log("ADD VOLUNTEER DIALOG DEBUG", {
     shiftLabel,
